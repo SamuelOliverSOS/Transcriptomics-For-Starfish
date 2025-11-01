@@ -1,0 +1,14 @@
+---
+title: "01_BLAST"
+output: html_document
+---
+
+This file is part of the process of me learning BLAST in the command pipeline! I am excited about it :)
+
+```{bash}
+
+pwd
+pwd
+whoami
+ws===
+```
