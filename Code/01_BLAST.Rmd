@@ -6,12 +6,27 @@ output: html_document
 "This file is part of the process of me learning BLAST in the command pipeline! I am excited about it :)"
 
 ```{bash}
+# make database 
 sudo makeblastdb \
 -in ../Data/uniprot_sprot_s2025_04.fasta \
 -dbtype prot \
 -out ../blastdb/uniprot_sprot_s2025_04
-cd ../Data
-sudo blastx \
--query gbbct117.seq 
--cd ../uniprot_sprot_s2025_04.fasta
+# explore file
+head -3 ../Data/protein_two_spot.faa
+echo "how many sequences are there?"
+grep -c ">" ../Data/protein_two_spot.faa
+
+
 ```
+```{R}
+#read fasta
+fasta_file <- "../Data/protein_two_spot.faa" 
+sequences <- readDNAStringSet(fasta_file, format="fasta",
+               nrec=-1L, skip=0L, seek.first.rec=FALSE,
+               use.names=TRUE, with.qualities=FALSE)
+sequence_lengths <- width(sequences)
+sequence_lengths_df <- data.frame(Length = sequence_lengths)
+
+
+```
+  
