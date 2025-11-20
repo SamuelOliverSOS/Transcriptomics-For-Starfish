@@ -25,7 +25,7 @@ sequences <- readDNAStringSet(fasta_file, format="fasta",
                nrec=-1L, skip=0L, seek.first.rec=FALSE,
                use.names=TRUE, with.qualities=FALSE)
 sequence_lengths <- width(sequences)
-sequence_lengths_df <- data.frame(Length = sequence_lengths)
+sequence_lengths_df <- data.frame(Length = sequence_lengths
 
 
 ```
