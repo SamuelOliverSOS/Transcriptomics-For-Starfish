@@ -36,3 +36,6 @@ rsconnect/
 ncbi-blast-2.17.0+-win64 (1).exe
 uniprot_sprot_r2023_04.fasta
 uniprot_sprot_r2023_04.fasta.gz
+
+blastdb
+Data/un*

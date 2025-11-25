@@ -1,0 +1,111 @@
+---
+title: "01_BLAST"
+output: html_document
+author: "Steven Roberts"
+---
+
+"This file is part of the process of me learning BLAST in the command pipeline! I am excited about it :)"
+
+
+```{bash}
+cd ../Data
+curl -O https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+mv uniprot_sprot.fasta.gz uniprot_sprot_r2025_04.fasta.gz
+gunzip -k uniprot_sprot_r2025_04.fasta.gz
+```
+
+
+
+
+```{bash}
+# make database 
+makeblastdb \
+-in ../Data/uniprot_sprot_r2025_04.fasta \
+-dbtype prot \
+-out ../blastdb/uniprot_sprot_r2025_04
+
+```
+
+Query
+
+```{bash}
+cd ../Data
+wget -O Phel_cds.fa https://gannet.fish.washington.edu/seashell/bu-github/paper-pycno-sswd-2021-2022/data/augustus.hints.codingseq
+```
+
+
+
+```{bash}
+# explore file
+head -3 ../Data/Phel_cds.fa
+echo "how many sequences are there?"
+grep -c ">" ../Data/Phel_cds.fa
+```
+
+# Running Blastx
+
+
+```{bash}
+blastx \
+-query ../Data/Phel_cds.fa \
+-db ../blastdb/uniprot_sprot_r2025_04 \
+-out ../output/Phel_cds_blastx_sp.tab \
+-evalue 1E-20 \
+-num_threads 12 \
+-max_target_seqs 1 \
+-outfmt 6
+```
+
+
+
+
+
+
+
+
+
+
+```{R}
+#read fasta
+fasta_file <- "../Data/protein_two_spot.faa" 
+sequences <- readDNAStringSet(fasta_file, format="fasta",
+               nrec=-1L, skip=0L, seek.first.rec=FALSE,
+               use.names=TRUE, with.qualities=FALSE)
+sequence_lengths <- width(sequences)
+sequence_lengths_df <- data.frame(Length = sequence_lengths)
+
+# Plot histogram using ggplot2
+ggplot(sequence_lengths_df, aes(x = Length)) +
+  geom_histogram(binwidth = 3, color = "red", fill = "blue", alpha = 0.1) +
+  labs(title = "Histogram of Sequence Lengths",
+       x = "Sequence Length",
+       y = "Frequency") +
+  theme_minimal()
+# Calculate base composition 
+base_composition <- alphabetFrequency(sequences, baseOnly = TRUE)
+#convert do data frame, reshape for ggplot2
+base_composition_df <- as.data.frame(base_composition)
+base_composition_df$ID <- rownames(base_composition_df)
+```
+
+
+```{R}
+```
+
+
+```{R}
+```
+
+
+```{R}
+base_composition_melted <- reshape2::melt(base_composition_df, id.vars = "ID",variable.name = "Base", value.name = "Count")
+# plot base compostion with a bar chart
+ggplot(base_compistion_melted, aes(x = Base, y = Count, fill = Base))+
+  geom_bar(stat = "identity", position = "dodge", color = "black")+
+  labs(title = "Base Composition",
+       x = "Base",
+       y = "Count") +
+  theme_minimal() +
+  scale_fill_manual(values = c("A" = "green", "C"="blue", "G"="yellow", "T"= "red"))
+```
+  
