@@ -7,7 +7,8 @@ Author: "Samuel Slutz"
 ```{R}
 library(readr)
 closeAllConnections()
-# this program looks at baseMeans generated from BLAST processing and compares the basemeans of two sets, it generates a file for shared an unique values
+setwd("C:/Users/samue/Documents/Git_Hub_Repository")
+# this program looks at base Means generated from BLAST processing and compares the basemeans of two sets, it generates a file for shared an unique values
 #all naming conventions here and files can be switched out, you could probably use this to compare other types of genetic data just as well
 indv1 <- read_lines("BlAST-Exploration/Data/Only_Infected_or_not_basecodes.txt", skip = 0, skip_empty_rows = TRUE, n_max = Inf, locale = default_locale(), na = character(), lazy = should_read_lazy(), num_threads = 12, progress = show_progress())
 indv2 <- read_lines("BlAST-Exploration/Data/Derm_augustus_basecodes.txt", skip = 0, skip_empty_rows = TRUE, n_max = Inf, locale = default_locale(), na = character(), lazy = should_read_lazy(), num_threads = 12, progress = show_progress())
@@ -21,7 +22,7 @@ for(prot1 in indv1){
   count <- 1
   while(count <= stopper){
     #inner loop makes program search for matching base means in indv2 (second file)
-    protein2 <- substring(indv2[count],1, nchar(prot1))
+    protein2 <- substring(indv2[count],1, unlist(gregexpr('t', indv2[count]))[1]-2)
     if(protein2 == prot1){
       shared <- append(indv2[count],shared)
       count <- stopper
@@ -42,6 +43,6 @@ for(y in shared){
   cat(y, file = "BlAST-Exploration/Output/proteins_only_in_DI_when_infected_w_vibrios.txt", sep = "\n", fill = TRUE, append = TRUE)
   
 }
-closeAllconnections()
+closeAllConnections()
 ```
 
